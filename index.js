@@ -28,6 +28,7 @@ async function run() {
     // await client.connect();
     const petDB = client.db("petServices");
     const petServicesCollection = petDB.collection("pServices");
+    const orderCollection = petDB.collection("orders");
     // Get all Services
     app.get("/services", async (req, res) => {
       const { category } = req.query;
@@ -105,6 +106,23 @@ async function run() {
       const result = await petServicesCollection.deleteOne(query);
       res.send(result);
     });
+
+    // Get All Order data
+    app.get("/orders", async (req, res) => {
+      const cursor = orderCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // Create a new  Order data
+    app.post("/orders", async (req, res) => {
+      const data = req.body;
+      const date = new Date();
+      data.createdAt = date;
+      const result = await orderCollection.insertOne(data);
+      res.send(result);
+    });
+
     // await client.db("admin").command({ ping: 1 });
     // console.log(
     //   "Pinged your deployment. You successfully connected to MongoDB!"
