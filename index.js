@@ -37,8 +37,33 @@ async function run() {
         query.category = category;
       }
 
-      const cursor = petServicesCollection.find(query);
+      const cursor = petServicesCollection.find(query).sort({ createdAt: -1 });
       const result = await cursor.toArray();
+
+      result.forEach((item) => {
+        console.log("Created At:", item.createdAt);
+      });
+
+      res.send(result);
+    });
+    // Recent Listings
+    app.get("/recentlisting", async (req, res) => {
+      const { category } = req.query;
+      const query = {};
+      if (category) {
+        query.category = category;
+      }
+
+      const cursor = petServicesCollection
+        .find(query)
+        .sort({ createdAt: -1 })
+        .limit(6);
+      const result = await cursor.toArray();
+
+      result.forEach((item) => {
+        console.log("Created At:", item.createdAt);
+      });
+
       res.send(result);
     });
 
