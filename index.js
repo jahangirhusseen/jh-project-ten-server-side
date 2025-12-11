@@ -40,10 +40,6 @@ async function run() {
       const cursor = petServicesCollection.find(query).sort({ createdAt: -1 });
       const result = await cursor.toArray();
 
-      result.forEach((item) => {
-        console.log("Created At:", item.createdAt);
-      });
-
       res.send(result);
     });
     // Recent Listings
@@ -59,14 +55,15 @@ async function run() {
         .sort({ createdAt: -1 })
         .limit(6);
       const result = await cursor.toArray();
-
-      result.forEach((item) => {
-        console.log("Created At:", item.createdAt);
-      });
-
       res.send(result);
     });
-
+    // Category
+    app.get("/category-filtered", async (req, res) => {
+      const category = req.params.category;
+      const query = { category };
+      const result = await petServicesCollection.find(query).toArray();
+      res.send(result);
+    });
     // Get single services data
 
     app.get("/services/:id", async (req, res) => {
